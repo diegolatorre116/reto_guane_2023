@@ -15,7 +15,7 @@ class Assignment(Base):
     )
 
     # ORM relationship between Assignment and Project entity
-    project_id = fields.ForeignKeyField(
+    project = fields.ForeignKeyField(
         "models.Project",
         related_name="assignments",
         on_delete=fields.CASCADE

@@ -19,7 +19,7 @@ class Collaborator(Base):
     is_active = fields.BooleanField(default=True)
     
     # ORM relationship between Collaborator and Job entity
-    job_id = fields.ForeignKeyField(
+    job = fields.ForeignKeyField(
         "models.Job",
         related_name="collaborators",
         on_delete=fields.RESTRICT

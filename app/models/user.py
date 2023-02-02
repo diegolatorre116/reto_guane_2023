@@ -16,7 +16,7 @@ class User(Base):
     role = fields.CharEnumField(Roles)
 
     # ORM relationship between User and Department entity
-    department_id = fields.ForeignKeyField(
+    department = fields.ForeignKeyField(
         "models.Department",
         related_name="users",
         on_delete=fields.CASCADE

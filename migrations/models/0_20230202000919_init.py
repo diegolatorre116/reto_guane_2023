@@ -11,7 +11,8 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
 CREATE TABLE IF NOT EXISTS "job" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "name" VARCHAR(64) NOT NULL,
-    "department_id_id" INT NOT NULL REFERENCES "department" ("id") ON DELETE CASCADE
+    "description" TEXT NOT NULL,
+    "department_id" INT NOT NULL REFERENCES "department" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "collaborator" (
     "id" SERIAL NOT NULL PRIMARY KEY,
@@ -20,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "collaborator" (
     "gender" VARCHAR(6) NOT NULL,
     "age" INT NOT NULL,
     "is_active" BOOL NOT NULL  DEFAULT True,
-    "job_id_id" INT NOT NULL REFERENCES "job" ("id") ON DELETE RESTRICT
+    "job_id" INT NOT NULL REFERENCES "job" ("id") ON DELETE RESTRICT
 );
 COMMENT ON COLUMN "collaborator"."gender" IS 'MALE: MALE\nFEMALE: FEMALE';
 CREATE TABLE IF NOT EXISTS "project" (
@@ -36,7 +37,7 @@ CREATE TABLE IF NOT EXISTS "assignment" (
     "name" VARCHAR(64) NOT NULL,
     "start_date" DATE NOT NULL,
     "final_date" DATE NOT NULL,
-    "project_id_id" INT NOT NULL REFERENCES "project" ("id") ON DELETE CASCADE
+    "project_id" INT NOT NULL REFERENCES "project" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "user" (
     "id" SERIAL NOT NULL PRIMARY KEY,
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS "user" (
     "password" VARCHAR(128) NOT NULL,
     "email" VARCHAR(256) NOT NULL,
     "role" VARCHAR(7) NOT NULL,
-    "department_id_id" INT NOT NULL REFERENCES "department" ("id") ON DELETE CASCADE
+    "department_id" INT NOT NULL REFERENCES "department" ("id") ON DELETE CASCADE
 );
 COMMENT ON COLUMN "user"."role" IS 'C_LEVEL: C-LEVEL\nLEADER: LEADER';
 CREATE TABLE IF NOT EXISTS "announcement" (
@@ -52,13 +53,17 @@ CREATE TABLE IF NOT EXISTS "announcement" (
     "name" VARCHAR(64) NOT NULL,
     "description" TEXT NOT NULL,
     "date" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "user_id_id" INT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
+    "user_id" INT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "aerich" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "version" VARCHAR(255) NOT NULL,
     "app" VARCHAR(100) NOT NULL,
     "content" JSONB NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "project_collaborator" (
+    "project_id" INT NOT NULL REFERENCES "project" ("id") ON DELETE CASCADE,
+    "collaborator_id" INT NOT NULL REFERENCES "collaborator" ("id") ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS "assignment_collaborator" (
     "assignment_id" INT NOT NULL REFERENCES "assignment" ("id") ON DELETE CASCADE,

@@ -3,11 +3,14 @@ import logging
 from fastapi import FastAPI
 
 from app.db.database import init_db
+from app.api.api import api_router
 
 log = logging.getLogger("uvicorn")
 
 def create_app() -> FastAPI:
     app = FastAPI()
+
+    app.include_router(api_router, prefix="/api")
 
     return app
 

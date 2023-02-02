@@ -9,7 +9,7 @@ class Announcement(Base):
     date = fields.DatetimeField(auto_now=True)
 
     # ORM relationship between Announcement and User entity
-    user_id = fields.ForeignKeyField(
+    user = fields.ForeignKeyField(
         "models.User",
         related_name="announcements",
         on_delete=fields.CASCADE
