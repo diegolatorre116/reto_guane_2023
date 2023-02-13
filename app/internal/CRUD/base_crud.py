@@ -20,7 +20,6 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         self.model = model
 
-
     async def get_all(self) -> list[ModelType]:
         db_objs = await self.model.all().values()
         return db_objs
@@ -92,4 +91,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             return None
         await obj.delete()
         return obj
+
+    async def count_records(self) -> int:
+        "Returns the total number of records in a database table."
+        total = await self.model.all().count()
+        return total
         

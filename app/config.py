@@ -2,7 +2,7 @@ import os
 import pathlib
 from functools import lru_cache
 
-
+# Module to manage application configuration. 
 class BaseConfig:
     BASE_DIR: pathlib.Path = pathlib.Path(__file__).parent.parent
 
@@ -24,7 +24,7 @@ class ProductionConfig(BaseConfig):
 
 
 class TestingConfig(BaseConfig):
-    DATABASE_TEST_URL: str = os.environ.get("DATABASE_TEST_URL")
+    DATABASE_URL: str = os.environ.get("DATABASE_TEST_URL")
 
 
 @lru_cache()

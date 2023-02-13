@@ -18,34 +18,79 @@ user_web_crud = internal.WebCRUDWrapper(
     response_model= list[schemas.User],
     name="List all users"
 )
-async def get_users() -> Any:
+async def get_users(current_user=Depends(allow_clevel)) -> Any:
     """
-    Get all users.
+    Get a list all "user" entities. Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+
+    ```json
+    [
+    {
+    "username": "guane",
+    "email": "guane@example.com",
+    "role": "C-LEVEL",
+    "id": 1,
+    "department_id": 1
+    },
+    {
+    "username": "Daniel_10",
+    "email": "daniel@example.com",
+    "role": "LEADER",
+    "id": 2,
+    "department_id": 1
+    }
+    ...
+    ]
+    ``` 
     """
     return await user_web_crud.get_all_entries()
 
 
 @users_router.get(
-    "/{username}",
+    "/{user_id}",
     response_model= schemas.User,
-    name="User info by username"
+    name="User info by id"
 )
-async def get_user_by_username(username:str) -> Any:
+async def get_user_id(user_id:int, current_user=Depends(allow_clevel)) -> Any:
     """
-    Get a specific user by username.
+    Read one "user" entity based on its id. Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "username": "guane",
+    "email": "guane@example.com",
+    "role": "C-LEVEL",
+    "id": 1,
+    "department_id": 1
+    }
+    ```
     """
-    return await user_web_crud.get_enty_by_field("username", username)
+    return await user_web_crud.get_enty_by_field("id", user_id)
 
 
 @users_router.post(
     "/",
     response_model=schemas.User,
+    name="Create new user",
     status_code=status.HTTP_201_CREATED
 )
-async def create_user(user_in: schemas.UserCreate) -> Any:
+async def create_user(
+    user_in: schemas.UserCreate, 
+    current_user=Depends(allow_clevel)
+    ) -> Any:
     """
-    Create new user. There are two possible roles: "C-LEVEL" and
-    "LEADER"
+    Create one "user" entity. There are two possible roles: "C-LEVEL" and
+    "LEADER". The password will be stored encrypted in the database.
+    The return of the api has a following scheme:
+    ```json
+    {
+    "username": "Daniel_10",
+    "email": "daniel@example.com",
+    "role": "LEADER",
+    "id": 2,
+    "department_id": 1
+    }
+    ```
     """
     return await user_web_crud.post_enty(
         enty_info=user_in
@@ -53,37 +98,59 @@ async def create_user(user_in: schemas.UserCreate) -> Any:
 
 
 @users_router.patch(
-    "/{username}",
+    "/{user_id}",
     response_model = schemas.User,
-    name="Update user by username"
+    name="Update user by id"
 )
-async def update_user_by_username(
-    username:str,
-    user_update:schemas.UserUpdate
+async def update_user_id(
+    user_id:int,
+    user_update:schemas.UserUpdate,
+    current_user=Depends(allow_clevel)
 ):
     """
-    Update user by username
+    Update one "user" entity by id. Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "username": "daniel_17",
+    "email": null,
+    "role": null,
+    "id": null,
+    "department_id": null
+    }
+    ```
+    (In this example only the username was updated)
     """
     return await user_web_crud.update_enty_by_field(
-        field="username",
-        value_in=username,
+        field="id",
+        value_in=user_id,
         enty_new_info=user_update
     )
     
 
 @users_router.delete(
-    "/{username}",
+    "/{user_id}",
     response_model = schemas.User,
-    name="Delete user by username"
+    name="Delete user by id"
 )
 async def delete_user_by_username(
-    username:str,
-    current_user = Depends(allow_clevel)
+    user_id:str,
+    current_user=Depends(allow_clevel)
 ):
     """
-    Delete user by name
+    Delete one "user" entity bases on its id. Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "username": "Daniel_10",
+    "email": "daniel@example.com",
+    "role": "LEADER",
+    "id": 2,
+    "department_id": 1
+    }
+    ```
     """
     return await user_web_crud.delete_enty_by_field(
-        field="username",
-        value_in=username
+        field="id",
+        value_in=user_id
     )

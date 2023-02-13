@@ -16,6 +16,7 @@ TORTOISE_ORM = {
                 "app.models.job",
                 "app.models.project",
                 "app.models.user",
+                "app.models.project_collaborator",
                 "aerich.models"
                 ],
             "default_connection": "default",
@@ -35,8 +36,11 @@ def init_db(app: FastAPI) -> None:
             "app.models.department",
             "app.models.job",
             "app.models.project",
-            "app.models.user"
+            "app.models.user",
+            "app.models.project_collaborator"
             ]},
-        generate_schemas=False,
+        generate_schemas=True,
         add_exception_handlers=True,
     )
+
+print(os.environ.get("DATABASE_URL"))

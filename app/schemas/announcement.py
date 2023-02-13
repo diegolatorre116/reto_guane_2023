@@ -1,29 +1,26 @@
+from datetime import date
+
 from pydantic import BaseModel
 
 
 # Shared properties
-class JobBase(BaseModel):
+class AnnouncementBase(BaseModel):
     name: str | None = None
     description: str | None = None
 
 
 # Properties to receive via API on creation
-class JobCreate(JobBase):
+class AnnouncementCreate(AnnouncementBase):
     name: str
-    department_id: int
-
-
-# Properties to receive via API on update
-class JobUpdate(JobBase):
-    pass
+    user_id: int
 
 
 # Properties shared by models stored in DB
-class JobInDBBase(JobBase):
+class AnnouncementInDBBase(AnnouncementBase):
     id: int | None = None
-    department_id: int | None = None
+    user_id: int | None = None
 
 
 # Properties to return via API
-class Job(JobInDBBase):
+class Announcement(AnnouncementInDBBase):
     pass

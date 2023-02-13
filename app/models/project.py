@@ -4,7 +4,7 @@ from app.models.base_class import Base
 
 
 class Project(Base):
-    name = fields.CharField(max_length=64)
+    name = fields.CharField(max_length=64, null=False)
     description = fields.TextField()
     customer = fields.CharField(max_length=64)
     start_date = fields.DateField(null=False)

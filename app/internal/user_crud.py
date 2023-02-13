@@ -2,10 +2,10 @@ from typing import Optional, Any
 
 from fastapi.encoders import jsonable_encoder
 
-from app.internal.base_crud import CRUDBase
+from app.internal.CRUD.base_crud import CRUDBase
 from app.schemas import UserCreate, UserUpdate
 from app.models.user import User
-from app.internal.base_crud import ModelType, CreateSchemaType, UpdateSchemaType
+from app.internal.CRUD.base_crud import ModelType, CreateSchemaType, UpdateSchemaType
 from app.core.security.pwd import password_hash
  
 

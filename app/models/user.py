@@ -21,3 +21,8 @@ class User(Base):
         related_name="users",
         on_delete=fields.CASCADE
     )
+
+    # The table name has been set to "user_db" because the name:"user" 
+    # causes conflicts when querying the PostgreSQL database. 
+    class Meta:
+        table = 'user_db'

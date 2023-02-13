@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import HTTPException
 from pydantic import BaseModel
 
-from app.internal.base_crud import CRUDBase
+from app.internal.CRUD.base_crud import CRUDBase
 from app.models.base_class import Base
 
 

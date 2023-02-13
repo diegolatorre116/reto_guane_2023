@@ -9,9 +9,10 @@ class Assignment(Base):
     final_date = fields.DateField(null=False)
 
     # ORM relationship between Assignment and Collaborator entity
-    collaborators = fields.ManyToManyField(
+    collaborator = fields.ForeignKeyField(
         "models.Collaborator",
-        related_name="assignments"
+        related_name="assignments",
+        on_delete=fields.CASCADE
     )
 
     # ORM relationship between Assignment and Project entity

@@ -7,3 +7,4 @@ pydantic[email]
 passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
+pytest==7.1.2

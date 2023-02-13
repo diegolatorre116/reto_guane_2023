@@ -45,22 +45,3 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         return current_user
 
 
-# async def get_current_user(token: str = Depends(oauth2_scheme)):
-#         credentials_exception = HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Could not validate credentials",
-#             headers={"WWW-Authenticate": "Bearer"},
-#         )
-#         payload = jwt.decode(
-#                 token,
-#                 settings.SECRET_KEY,
-#                 algorithms=[settings.ALGORITHM]
-#                 )
-#         username: str = payload.get("sub")
-#         token_data = TokenData(username=username)
-#         current_user = await user.get_by_field(
-#             field="username",
-#             value=token_data.username
-#             )
-#         print(current_user)
-#         return current_user

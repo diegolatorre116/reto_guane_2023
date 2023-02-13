@@ -17,6 +17,13 @@ security_router = APIRouter()
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
+    """
+    Try to get the token with this user:
+    ```markdown
+    user: guane
+    password: ironparadise16
+    ```
+    """
     user = await authenticate_user(
         form_data.username,
         form_data.password
