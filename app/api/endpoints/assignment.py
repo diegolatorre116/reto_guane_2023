@@ -25,6 +25,27 @@ async def get_assignments(current_user=Depends(allow_clevel_leader)) -> Any:
     Get a list of all "assignment" entities. Allowed for "C-LEVEL" AND 
     "LEADER".
     Allowed for "C-LEVEL" AND "LEADER"
+    The return of the api has a following scheme:
+    ```json
+    [
+    {
+        "name": "task1",
+        "start_date": "2023-02-13",
+        "final_date": "2023-02-20",
+        "id": 1,
+        "collaborator_id": 1,
+        "project_id": 1
+    },
+    {
+        "name": "task2",
+        "start_date": "2023-02-22",
+        "final_date": "2023-02-27",
+        "id": 2,
+        "collaborator_id": 1,
+        "project_id": 1
+    }...
+    ]
+    ``` 
     """
     return await assignment_web_crud.get_all_entries()
 
@@ -34,13 +55,24 @@ async def get_assignments(current_user=Depends(allow_clevel_leader)) -> Any:
     response_model= schemas.Assignment,
     name="Assignment info by id"
 )
-async def get_job_id(
+async def get_assignment_id(
     assignment_id:int,
     current_user=Depends(allow_clevel_leader)
     ) -> Any:
     """
     Read one "assignmment" entity based on its id.
     Allowed for "C-LEVEL" and "LEADER".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "task1",
+    "start_date": "2023-02-13",
+    "final_date": "2023-02-20",
+    "id": 1,
+    "collaborator_id": 1,
+    "project_id": 1
+    }
+    ```
     """
     return await assignment_web_crud.get_enty_by_field("id", assignment_id)
 
@@ -58,6 +90,17 @@ async def create_assignment(
     Create one "assignment" entity. In order to create the "assignment",
     the collaborator must be added to the corresponding project.
     Allowed for "C-LEVEL" and "LEADER".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "task1",
+    "start_date": "2023-02-13",
+    "final_date": "2023-02-20",
+    "id": 1,
+    "collaborator_id": 1,
+    "project_id": 1
+    }
+    ```
     """
     try:
         create_assignment = await assignment.create(
@@ -97,6 +140,18 @@ async def update_assignment_by_id(
     """
     Update one "assignment" entity by id. Allowed for "C-LEVEL" and
     "LEADER"
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "task_easy",
+    "start_date": null,
+    "final_date": null,
+    "id": null,
+    "collaborator_id": null,
+    "project_id": null
+    }
+    (In this example only the name was updated)
+    ```
     """
     return await assignment_web_crud.update_enty_by_field(
         field="id",
@@ -117,6 +172,17 @@ async def delete_assignment_by_id(
     """
     Delete one "assignment" entity bases on its id.
     Allowed for "C-LEVEL" and "LEADER".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "task1",
+    "start_date": "2023-02-13",
+    "final_date": "2023-02-20",
+    "id": 1,
+    "collaborator_id": 1,
+    "project_id": 1
+    }
+    ```
     """
     return await assignment_web_crud.delete_enty_by_field(
         field="id",

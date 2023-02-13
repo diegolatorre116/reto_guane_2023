@@ -24,6 +24,28 @@ async def get_projects(current_user=Depends(allow_clevel_leader)) -> Any:
     """
     Get a list of all "projects" entities. Allowed for "C-LEVEL" AND
     "LEADER"
+    The return of the api has a following scheme:
+
+    ```json
+    [
+    {
+        "name": "Avigail",
+        "description": "About avigail",
+        "customer": "Apple",
+        "start_date": "2023-02-13",
+        "final_date": "2023-11-13",
+        "id": 1
+    },
+    {
+        "name": "Addam",
+        "description": "About addam",
+        "customer": "Microsoft",
+        "start_date": "2023-02-13",
+        "final_date": "2023-12-15",
+        "id": 2
+    }...
+    ]
+    ``` 
     """
     return await project_web_crud.get_all_entries()
 
@@ -36,6 +58,10 @@ async def count_projects(current_user=Depends(allow_clevel)) -> Any:
     """
     Get the total number of "project" entity records.
     Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    2
+    ```
     """
     return await internal.project.count_records()
 
@@ -53,6 +79,29 @@ async def collaborators_in_project(
     Get a list of all "collaborator" entities that have a relationship 
     with a "project" entitiy by project_id (FK).
     Allowed for "C-LEVEL" and "LEADER"
+    The return of the api has a following scheme:
+    ```json
+    [
+    {
+        "name": "Diego",
+        "last_name": "Latorre",
+        "gender": "MALE",
+        "age": 24,
+        "is_active": true,
+        "job_id": 1,
+        "id": 1
+    },
+    {
+        "name": "Andres",
+        "last_name": "Alvarez",
+        "gender": "MALE",
+        "age": 25,
+        "is_active": true,
+        "job_id": 1,
+        "id": 2
+    }
+    ]
+    ```
     """
     try:
         collaborators = await project.get_collaborators_by_project(
@@ -87,6 +136,27 @@ async def get_assignments(
     Get a list of all "assignment" entities that have a relationship with
     a "project" entitiy by project_id (FK).
     Allowed for "C-LEVEL" and "LEADER"
+    The return of the api has a following scheme:
+    ```json
+    [
+    {
+        "name": "task1",
+        "start_date": "2023-02-13",
+        "final_date": "2023-02-20",
+        "id": 1,
+        "collaborator_id": 1,
+        "project_id": 1
+    },
+    {
+        "name": "task2",
+        "start_date": "2023-02-22",
+        "final_date": "2023-02-27",
+        "id": 2,
+        "collaborator_id": 1,
+        "project_id": 1
+    }...
+    ]
+    ```
     """
     try:
         assignments =  await project.get_asignments_by_project(
@@ -120,6 +190,17 @@ async def get_project_by_id(
     """
     Read one "project" entity based on its id. Allowed for "C-LEVEL" AND
     "LEADER"
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "Avigail",
+    "description": "About avigail",
+    "customer": "Apple",
+    "start_date": "2023-02-13",
+    "final_date": "2023-11-13",
+    "id": 1
+    }
+    ```
     """
     return await project_web_crud.get_enty_by_field("id", project_id)
 
@@ -135,6 +216,17 @@ async def create_project(
     ) -> Any:
     """
     Create one "project" entity. Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "Avigail",
+    "description": "About avigail",
+    "customer": "Apple",
+    "start_date": "2023-02-13",
+    "final_date": "2023-11-13",
+    "id": 1
+    }
+    ```
     """
     return await project_web_crud.post_enty(
         enty_info=project_in
@@ -158,6 +250,14 @@ async def add_collaborator(
     After adding the collaborator, an announcement will be created with
     this information.
     Allowed for "C-LEVEL"
+    The return of the api has a following scheme:
+    ```json
+    {
+    "collaborator_id": 2,
+    "id": 2,
+    "project_id": 1
+    }
+    ```
     """
     try:
         new_collaborator = await project_collaborator_obj.add_collaborator(
@@ -211,6 +311,18 @@ async def update_project_by_id(
 ):
     """
     Update one "project" entity by id. Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": null,
+    "description": null,
+    "customer": null,
+    "start_date": "2023-02-13",
+    "final_date": null,
+    "id": null
+    }
+    (In this example only the start_date was updated)
+    ```
     """
     return await project_web_crud.update_enty_by_field(
         field="id",
@@ -230,7 +342,18 @@ async def delete_project_by_id(
 ):
     """
     Delete one "project" entity bases on its id.
-    Allowed for "C-LEVEL"."
+    Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "Avigail",
+    "description": "About avigail",
+    "customer": "Apple",
+    "start_date": "2023-02-13",
+    "final_date": "2023-11-13",
+    "id": 1
+    }
+    ```
     """
     return await project_web_crud.delete_enty_by_field(
         field="id",
@@ -253,6 +376,14 @@ async def delete_collaborator_to_project(
     After removin the collaborator, an announcement will be created with
     this information.
     Allowed for "C-LEVEL"
+    The return of the api has a following scheme:
+    ```json
+    {
+    "collaborator_id": 2,
+    "id": 2,
+    "project_id": 1
+    }
+    ```
     """
     try:
         collaborator_delete = await project_collaborator_obj.remove_collaborator(

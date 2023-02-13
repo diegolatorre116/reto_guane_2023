@@ -24,6 +24,29 @@ async def get_collaborators(current_user=Depends(allow_clevel_leader)) -> Any:
     """
     Get a list of all "collaborator" entities. Allowed for "C-LEVEL"
     and "LEADER"
+    The return of the api has a following scheme:
+    ```json
+    [
+    {
+        "name": "Diego",
+        "last_name": "Latorre",
+        "gender": "MALE",
+        "age": 24,
+        "is_active": true,
+        "job_id": 1,
+        "id": 1
+    },
+    {
+        "name": "Andres",
+        "last_name": "Alvarez",
+        "gender": "MALE",
+        "age": 25,
+        "is_active": true,
+        "job_id": 1,
+        "id": 2
+    }...
+    ]
+    ``` 
     """
     return await collaborator_web_crud.get_all_entries()
 
@@ -36,6 +59,10 @@ async def count_collaborators(current_user=Depends(allow_clevel)) -> Any:
     """
     Get the total number of "collaborator" entity records.
     Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    3
+    ```
     """
     return await collaborator.count_records()
 
@@ -49,6 +76,10 @@ async def count_active_collaborators(current_user=Depends(allow_clevel)) -> Any:
     Count all "collaborators" entities that are active (is_active=True).
     A collaborator may not be active due to permission, disability, etc..
     Allowed for "C-LEVEL"
+    The return of the api has a following scheme:
+    ```json
+    2
+    ```
     """
     return await collaborator.count_by_field(
         field="is_active",
@@ -69,6 +100,10 @@ async def count_collaborators_job(
     functionality of knowing things like: How many backend dev do
     we have?, How many data science do we have? etc
     Allowed for "C-LEVEL"
+    The return of the api has a following scheme:
+    ```json
+    2
+    ```
     """
     return await collaborator.count_by_field(
         field="job_id",
@@ -88,6 +123,18 @@ async def get_collaborator_by_id(
     """
     Read one "collaborator" entity based on its id. Allowed for
     "C-LEVEL" AND "LEADER"
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "Diego",
+    "last_name": "Latorre",
+    "gender": "MALE",
+    "age": 24,
+    "is_active": true,
+    "job_id": 1,
+    "id": 1
+    }
+    ```
     """
     return await collaborator_web_crud.get_enty_by_field("id", collaborator_id)
 
@@ -105,6 +152,27 @@ async def get_assignments(
     Get a list of all "assignments" entities that have a relationship
     with a "collaborator" entitiy by collaborator_id (FK).
     Allowed for "C-LEVEL" AND "LEADER".
+    The return of the api has a following scheme:
+    ```json
+    [
+    {
+        "name": "task1",
+        "start_date": "2023-02-13",
+        "final_date": "2023-02-20",
+        "id": 1,
+        "collaborator_id": 1,
+        "project_id": 1
+    },
+    {
+        "name": "task1",
+        "start_date": "2023-02-22",
+        "final_date": "2023-02-27",
+        "id": 2,
+        "collaborator_id": 1,
+        "project_id": 1
+    }...
+    ]
+    ```
     """
     try:
         assignments =  await collaborator.get_assignments_by_collaborator(
@@ -138,7 +206,19 @@ async def create_collaborator(
     ) -> Any:
     """
     Create one "collaborator" entity. There are two possible genders:
-    "MALE" and "FEMALE". Allowed for "C-LEVEL"
+    "MALE" and "FEMALE". Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "Diego",
+    "last_name": "Latorre",
+    "gender": "MALE",
+    "age": 24,
+    "is_active": true,
+    "job_id": 1,
+    "id": 1
+    }
+    ```
     """
     return await collaborator_web_crud.post_enty(
         enty_info=collaborator_in
@@ -157,6 +237,19 @@ async def update_collaborator_by_id(
 ):
     """
     Update one "collaborator" entity by id. Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "null",
+    "last_name": "null",
+    "gender": "null",
+    "age": 25,
+    "is_active": null,
+    "job_id": null,
+    "id": null
+    }
+    (In this example only the age was updated)
+    ```
     """
     return await collaborator_web_crud.update_enty_by_field(
         field="id",
@@ -177,6 +270,18 @@ async def delete_collaborator_by_id(
     """
     Delete one "collaborator" entity bases on its id.
     Allowed for "C-LEVEL".
+    The return of the api has a following scheme:
+    ```json
+    {
+    "name": "Diego",
+    "last_name": "Latorre",
+    "gender": "MALE",
+    "age": 24,
+    "is_active": true,
+    "job_id": 1,
+    "id": 1
+    }
+    ```
     """
     return await collaborator_web_crud.delete_enty_by_field(
         field="id",
@@ -195,7 +300,33 @@ async def available_collaborators(
     current_user=Depends(allow_clevel)
 ):
     """
-    asd
+    Gets a list of all collaborators of a job who have no assignment for
+    a specific day (date parameter). This can be useful for example if
+    you want to know for some date something like "What backend developers
+    do I have available?"
+    The return of the api has a following scheme:
+    ```json
+    [
+    {
+        "name": "Diego",
+        "last_name": "Latorre",
+        "gender": "MALE",
+        "age": 24,
+        "is_active": true,
+        "job_id": 1,
+        "id": 1
+    },
+    {
+        "name": "Andres",
+        "last_name": "Alvarez",
+        "gender": "MALE",
+        "age": 25,
+        "is_active": true,
+        "job_id": 1,
+        "id": 2
+    }...
+    ]
+    ```
     """
     return await collaborator.filter_availability(
         date=date,
